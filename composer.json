@@ -1,6 +1,7 @@
 {
     "name": "mccool/laravel-slugs",
     "type": "library",
+    "version": "0.0.1",
     "description": "Automatic slug system for Laravel 4.",
     "keywords": ["slug", "laravel"],
     "license": "MIT",
