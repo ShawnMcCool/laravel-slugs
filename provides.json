@@ -1,0 +1,7 @@
+{
+  "providers": [
+        "McCool\LaravelSlugs\LaravelSlugsServiceProvider"
+    ],
+    "aliases": [
+    ]
+}
