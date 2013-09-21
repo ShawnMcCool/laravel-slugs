@@ -65,11 +65,7 @@ class SlugGenerator
             $slugFound = Slug::where('primary', '=', 1)->where('slug', '=', $slug)->first();
 
             if ($slugFound) {
-                if (empty($padding)) {
-                    $padding = 1;
-                }
-
-                $padding++;
+                $padding = '-' . substr(md5($slug . rand(1,1000)), 0, 4);
             }
         } while($slugFound);
 
