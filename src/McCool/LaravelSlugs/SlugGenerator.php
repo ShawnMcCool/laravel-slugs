@@ -42,7 +42,7 @@ class SlugGenerator
 
     protected function generateSlug()
     {
-        $slugString = $this->getUniqueSlugString($this->model->getSlugString());
+        $slugString = $this->getUniqueSlugString($this->model->getSlugString(), $this->model->id);
 
         $this->removeHistoricalSlug($slugString);
 
@@ -54,7 +54,7 @@ class SlugGenerator
         ]);
     }
 
-    protected function getUniqueSlugString($slugString)
+    protected function getUniqueSlugString($slugString, $id)
     {
         $padding = '';
         $slug = '';
@@ -65,7 +65,7 @@ class SlugGenerator
             $slugFound = Slug::where('primary', '=', 1)->where('slug', '=', $slug)->first();
 
             if ($slugFound) {
-                $padding = '-' . substr(md5($slug . rand(1,1000)), 0, 4);
+                $padding = "-{$id}";
             }
         } while($slugFound);
 
