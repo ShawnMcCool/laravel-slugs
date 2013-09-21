@@ -10,14 +10,14 @@ class LaravelSlugsServiceProvider extends ServiceProvider
         $this->package('mccool/laravel-slugs');
 
         Event::listen('eloquent.created: *', function($model, $event) {
-            if ($model instanceOf SlugInterface && ! empty($model->getSlugString())) {
+            if ($model instanceOf SlugInterface and $model->getSlugString() != '') {
             	$generator = new SlugGenerator($model);
             	$generator->updateSlug();
             }
         });
 
         Event::listen('eloquent.updated: *', function($model, $event) {
-            if ($model instanceOf SlugInterface && ! empty($model->getSlugString())) {
+            if ($model instanceOf SlugInterface and $model->getSlugString() != '') {
             	$generator = new SlugGenerator($model);
             	$generator->updateSlug();
             }
