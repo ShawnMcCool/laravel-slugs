@@ -22,6 +22,10 @@ class Slug extends Eloquent
 
     public function getByString($slug)
     {
+        if (false !== strpos($slug, '#')) {
+            list($slug, $anchor) = explode('#', $slug);
+        }
+        
         return static::where('slug', '=', $slug)->first();
     }
 }
