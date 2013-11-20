@@ -11,14 +11,8 @@ class SlugGenerator
 
     public function updateSlug()
     {
-        if ($this->hasSlug() and $this->slugHasntChanged()) {
-            return;
-        }
-
-        if ($this->hasSlug()) {
-            $this->archiveSlug();
-        }
-
+        if ($this->hasSlug() and $this->slugHasntChanged()) return;
+        if ($this->hasSlug()) $this->archiveSlug();
         return $this->generateSlug();
     }
 
@@ -42,19 +36,19 @@ class SlugGenerator
 
     protected function generateSlug()
     {
-        $slugString = $this->getUniqueSlugString($this->model->getSlugString(), $this->model->id);
-
+        $modelClass = get_class($this->model);
+        $slugString = $this->getUniqueSlugString($this->model->getSlugString(), $this->model->id, $modelClass);
         $this->removeHistoricalSlug($slugString);
 
         return Slug::create([
             'slug'       => $slugString,
             'owner_id'   => $this->model->id,
-            'owner_type' => get_class($this->model),
+            'owner_type' => $modelClass,
             'primary'    => 1,
         ]);
     }
 
-    protected function getUniqueSlugString($slugString, $id)
+    protected function getUniqueSlugString($slugString, $id, $modelClass)
     {
         $padding = '';
         $slug = '';
@@ -62,7 +56,10 @@ class SlugGenerator
         do {
             $slug = $slugString . $padding;
 
-            $slugFound = Slug::where('primary', '=', 1)->where('slug', '=', $slug)->first();
+            $slugFound = Slug::where('primary', '=', 1)->where('slug', '=', $slug)->where(function($q) use ($id, $modelClass) {
+                $q->where('owner_id', '!=', $id);
+                $q->orWhere('owner_type', '!=', $modelClass);
+            })->first();
 
             if ($slugFound) {
                 $padding = "-{$id}";
